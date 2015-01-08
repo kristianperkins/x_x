@@ -12,10 +12,11 @@ setup(
     license='Apache 2.0',
     install_requires=[
         'xlrd',
+        'click',
     ],
     entry_points='''
        [console_scripts]
-       x_x=x_x:main
+        x_x=x_x.x_x:cli
     ''',
     classifiers=(
         'Environment :: Console',
