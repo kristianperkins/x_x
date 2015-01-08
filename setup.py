@@ -4,12 +4,15 @@ setup(
     name='x_x',
     author='Kristian Perkins',
     author_email='khperkins@gmail.com',
-    version='0.1',
+    version='0.3',
     url='http://github.com/krockode/x_x',
     py_modules=['x_x'],
     description='Excel file CLI Reader',
     long_description=open('README.rst').read(),
     license='Apache 2.0',
+    packages= [
+        'x_x',
+    ],
     install_requires=[
         'xlrd',
         'click',
