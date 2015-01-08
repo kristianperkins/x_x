@@ -55,3 +55,6 @@ docs/_build/
 # vi stuff
 *.swp
 *.swo
+
+# ignore excel files
+*.xls*
