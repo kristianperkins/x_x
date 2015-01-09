@@ -18,7 +18,7 @@ class XCursor(object):
             return [c.value for c in self.sheet.row(self.headingrow)]
         else:
             u = string.uppercase
-            cols = len(sheet.row(0))
+            cols = len(self.sheet.row(0))
             return [''.join(r) for idx, r in
                     enumerate(itertools.chain(u, itertools.product(u, u)))
                     if idx < cols]
@@ -28,15 +28,16 @@ class XCursor(object):
         return ([c.value for c in self.sheet.row(n)] for n in xrange(start, self.sheet.nrows))
 
 
-def main():
-    pass
-
-
 @click.command()
+@click.option('--heading',
+              '-h',
+              default=None,
+              type=int,
+              help='Row number containing the headings.')
 @click.argument('filename')
-def cli(filename):
+def cli(filename, heading):
     """ things and stuff about stuff and things """
     workbook = xlrd.open_workbook(filename)
     sheet = workbook.sheet_by_index(0)
-    asciitable.draw(XCursor(sheet, 0))
+    asciitable.draw(XCursor(sheet, heading))
 
