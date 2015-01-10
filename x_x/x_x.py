@@ -1,5 +1,6 @@
 import itertools
 import string
+import os
 
 import click
 import xlrd
@@ -39,5 +40,6 @@ def cli(filename, heading):
     """ things and stuff about stuff and things """
     workbook = xlrd.open_workbook(filename)
     sheet = workbook.sheet_by_index(0)
-    asciitable.draw(XCursor(sheet, heading))
+    out = os.popen('less -FXRiS', 'w')
+    asciitable.draw(XCursor(sheet, heading), out=out)
 
