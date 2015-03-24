@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# asciitable.py taken from ipydb: https://github.com/jaysw/ipydb
 
 """Draw ascii tables."""
 import itertools

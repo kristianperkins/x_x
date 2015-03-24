@@ -1,6 +1,13 @@
 x_x: The Dead Guy CLI
 =====================
 
+.. image:: https://badge.fury.io/py/x_x.png
+    :target: http://badge.fury.io/py/x_x
+
+.. image:: https://pypip.in/d/x_x/badge.png
+        :target: https://crate.io/packages/x_x/
+
+
 x_x is a Microsoft Excel file command line reader.  The purpose of this is to not break
 the workflow of people who live on the command line and need to access a
 spreadsheet generated using Microsoft Excel.
