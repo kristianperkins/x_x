@@ -29,7 +29,26 @@ Run using the `x_x` command:
 
 ::
 
-  $ x_x some_file.xls
+  $ x_x dead_guys.xlsx
+  +---------------+--------------+
+  | A             | B            |
+  +---------------+--------------+
+  | Person        | Age at Death |
+  | Harrold Holt  | 59.0         |
+  | Harry Houdini | 52.0         |
+  | Howard Hughes | 70.0         |
+
+Or to specify a specific row as the header which will be visible on each page:
+
+::
+
+  $ x_x -h 0 dead_guys.xlsx
+  +---------------+--------------+
+  | Person        | Age at Death |
+  +---------------+--------------+
+  | Harrold Holt  | 59.0         |
+  | Harry Houdini | 52.0         |
+  | Howard Hughes | 70.0         |
 
 For help use:
 
