@@ -5,6 +5,17 @@
 import itertools
 import sys
 
+from six import string_types, PY3
+from six.moves import zip, zip_longest
+
+
+def write_bytes(s, out, encoding="utf-8"):
+    """Provides 2 vs 3 compatibility for writing to ``out``"""
+    if PY3:
+        out.write(bytes(s, encoding))
+    else:
+        out.write(s)
+
 
 def termsize():
     """Try to figure out the size of the current terminal.
@@ -42,6 +53,7 @@ def termsize():
 
 
 class FakedResult(object):
+
     """Utility for making an iterable look like an sqlalchemy ResultProxy."""
 
     def __init__(self, items, headings):
@@ -56,6 +68,7 @@ class FakedResult(object):
 
 
 class PivotResultSet(object):
+
     """Pivot a result set into an iterable of (fieldname, value)."""
 
     def __init__(self, rs):
@@ -73,7 +86,7 @@ class PivotResultSet(object):
 
 
 def isublists(l, n):
-    return itertools.izip_longest(*[iter(l)] * n)
+    return zip_longest(*[iter(l)] * n)
 
 
 def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
@@ -92,20 +105,24 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
 
     def heading_line(sizes):
         for size in sizes:
-            out.write('+' + '-' * (size + 2))
-        out.write('+\n')
+            write_bytes('+' + '-' * (size + 2), out)
+            # out.write(bytes('+' + '-' * (size + 2), "utf-8"))
+        write_bytes('+\n', out)
+        # out.write(bytes('+\n', "utf-8"))
 
     def draw_headings(headings, sizes):
         heading_line(sizes)
         for idx, size in enumerate(sizes):
             fmt = '| %%-%is ' % size
-            out.write((fmt % headings[idx]))
-        out.write('|\n')
+            write_bytes((fmt % headings[idx]), out)
+            # out.write(bytes((fmt % headings[idx]), "utf-8"))
+        write_bytes('|\n', out)
+        # out.write(bytes('|\n', "utf-8"))
         heading_line(sizes)
 
     cols, lines = termsize()
-    headings = cursor.keys()
-    heading_sizes = map(lambda x: len(str(x)), headings)
+    headings = list(cursor.keys())
+    heading_sizes = [len(str(x)) for x in headings]
     if paginate:
         cursor = isublists(cursor, lines - 4)
         # else we assume cursor arrive here pre-paginated
@@ -115,7 +132,7 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
             if row is None:
                 break
             for idx, value in enumerate(row):
-                if not isinstance(value, basestring):
+                if not isinstance(value, string_types):
                     value = str(value)
                 size = max(sizes[idx], len(value))
                 sizes[idx] = min(size, max_fieldsize)
@@ -127,7 +144,7 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
                 fmt = '| %%-%is ' % size
                 if idx < len(rw):
                     value = rw[idx]
-                    if not isinstance(value, basestring):
+                    if not isinstance(value, string_types):
                         value = str(value)
                     if len(value) > max_fieldsize:
                         value = value[:max_fieldsize - 5] + '[...]'
@@ -139,7 +156,9 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
                     except UnicodeDecodeError:
                         value = fmt % '?'
                     out.write(value)
-            out.write('|\n')
+            write_bytes('|\n', out)
+            # out.write(bytes('|\n', "utf-8"))
         if not paginate:
             heading_line(sizes)
-            out.write('\n')
+            write_bytes('|\n', out)
+            # out.write(bytes('\n', "utf-8"))
