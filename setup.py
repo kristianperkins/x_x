@@ -10,12 +10,13 @@ setup(
     description='Excel file CLI Reader',
     long_description=open('README.rst').read(),
     license='Apache 2.0',
-    packages= [
+    packages=[
         'x_x',
     ],
     install_requires=[
         'xlrd',
         'click',
+        'six',
     ],
     entry_points='''
        [console_scripts]
