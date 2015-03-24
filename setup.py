@@ -4,7 +4,7 @@ setup(
     name='x_x',
     author='Kristian Perkins',
     author_email='khperkins@gmail.com',
-    version='0.6',
+    version='0.7',
     url='http://github.com/krockode/x_x',
     py_modules=['x_x'],
     description='Excel file CLI Reader',
