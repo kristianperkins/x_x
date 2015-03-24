@@ -32,7 +32,6 @@ class XCursor(object):
 @click.command()
 @click.option('--heading',
               '-h',
-              default=None,
               type=int,
               help='Row number containing the headings.')
 @click.argument('filename')

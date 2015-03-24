@@ -104,7 +104,7 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
 
     cols, lines = termsize()
     headings = cursor.keys()
-    heading_sizes = map(lambda x: len(x), headings)
+    heading_sizes = map(lambda x: len(str(x)), headings)
     if paginate:
         cursor = isublists(cursor, lines - 4)
         # else we assume cursor arrive here pre-paginated
@@ -124,19 +124,20 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
                 break  # from isublists impl
             for idx, size in enumerate(sizes):
                 fmt = '| %%-%is ' % size
-                value = rw[idx]
-                if not isinstance(value, basestring):
-                    value = str(value)
-                if len(value) > max_fieldsize:
-                    value = value[:max_fieldsize - 5] + '[...]'
-                value = value.replace('\n', '^')
-                value = value.replace('\r', '^').replace('\t', ' ')
-                value = fmt % value
-                try:
-                    value = value.encode('utf-8', 'replace')
-                except UnicodeDecodeError:
-                    value = fmt % '?'
-                out.write(value)
+                if idx < len(rw):
+                    value = rw[idx]
+                    if not isinstance(value, basestring):
+                        value = str(value)
+                    if len(value) > max_fieldsize:
+                        value = value[:max_fieldsize - 5] + '[...]'
+                    value = value.replace('\n', '^')
+                    value = value.replace('\r', '^').replace('\t', ' ')
+                    value = fmt % value
+                    try:
+                        value = value.encode('utf-8', 'replace')
+                    except UnicodeDecodeError:
+                        value = fmt % '?'
+                    out.write(value)
             out.write('|\n')
         if not paginate:
             heading_line(sizes)
