@@ -12,7 +12,10 @@ from six.moves import zip, zip_longest
 def write_bytes(s, out, encoding="utf-8"):
     """Provides 2 vs 3 compatibility for writing to ``out``"""
     if PY3:
-        out.write(bytes(s, encoding))
+        if isinstance(s, bytes):
+            out.write(s)
+        else:
+            out.write(bytes(s, encoding))
     else:
         out.write(s)
 
@@ -106,18 +109,14 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
     def heading_line(sizes):
         for size in sizes:
             write_bytes('+' + '-' * (size + 2), out)
-            # out.write(bytes('+' + '-' * (size + 2), "utf-8"))
         write_bytes('+\n', out)
-        # out.write(bytes('+\n', "utf-8"))
 
     def draw_headings(headings, sizes):
         heading_line(sizes)
         for idx, size in enumerate(sizes):
             fmt = '| %%-%is ' % size
             write_bytes((fmt % headings[idx]), out)
-            # out.write(bytes((fmt % headings[idx]), "utf-8"))
         write_bytes('|\n', out)
-        # out.write(bytes('|\n', "utf-8"))
         heading_line(sizes)
 
     cols, lines = termsize()
@@ -155,10 +154,8 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
                         value = value.encode('utf-8', 'replace')
                     except UnicodeDecodeError:
                         value = fmt % '?'
-                    out.write(value)
+                    write_bytes(value, out)
             write_bytes('|\n', out)
-            # out.write(bytes('|\n', "utf-8"))
         if not paginate:
             heading_line(sizes)
             write_bytes('|\n', out)
-            # out.write(bytes('\n', "utf-8"))
