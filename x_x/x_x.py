@@ -5,6 +5,7 @@ import itertools
 import click
 import xlrd
 import os
+import sys
 
 from . import asciitable, __version__
 from .compat import open_file, csv, out_proc
@@ -57,10 +58,13 @@ def cli(filename, heading, file_type, delimiter, quotechar, encoding):
         # As per https://secure.simplistix.co.uk/svn/xlrd/trunk/xlrd/doc/xlrd.html?p=4966
         # encodings in Excel are usually UTF-8. So, we only override the encoding
         # if an encoding is specified by the user.
-        if encoding.lower() != "utf-8":
-            workbook = xlrd.open_workbook(filename, encoding_override=encoding)
-        else:
-            workbook = xlrd.open_workbook(filename)
+        try:
+            if encoding.lower() != "utf-8":
+                workbook = xlrd.open_workbook(filename, encoding_override=encoding)
+            else:
+                workbook = xlrd.open_workbook(filename)
+        except Exception as e:
+            sys.exit(e)
 
         sheet = workbook.sheet_by_index(0)
 
@@ -69,3 +73,4 @@ def cli(filename, heading, file_type, delimiter, quotechar, encoding):
     with out_proc() as out:
 
         asciitable.draw(cursor, out=out)
+
