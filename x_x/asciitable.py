@@ -111,7 +111,10 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
 
     cols, lines = termsize()
     headings = list(cursor.keys())
-    heading_sizes = [len(str(x)) for x in headings]
+    if PY3:
+        heading_sizes = [len(str(x)) for x in headings]
+    else:
+        heading_sizes = [len(unicode(x)) for x in headings]
     if paginate:
         cursor = isublists(cursor, lines - 4)
         # else we assume cursor arrive here pre-paginated
@@ -122,7 +125,10 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
                 break
             for idx, value in enumerate(row):
                 if not isinstance(value, string_types):
-                    value = str(value)
+                    if PY3:
+                        value = str(value)
+                    else:
+                        value = unicode(value)
                 size = max(sizes[idx], len(value))
                 sizes[idx] = min(size, max_fieldsize)
         draw_headings(headings, sizes)
@@ -134,18 +140,15 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
                 if idx < len(rw):
                     value = rw[idx]
                     if not isinstance(value, string_types):
-                        value = str(value)
+                        if PY3:
+                            value = str(value)
+                        else:
+                            value = unicode(value)
                     if len(value) > max_fieldsize:
                         value = value[:max_fieldsize - 5] + '[...]'
                     value = value.replace('\n', '^')
                     value = value.replace('\r', '^').replace('\t', ' ')
                     value = fmt % value
-                    try:
-                        value = value.encode('utf-8', 'replace')
-                    except UnicodeDecodeError:
-                        value = fmt % '?'
-                    write_out(value, out)
-            write_out('|\n', out)
         if not paginate:
             heading_line(sizes)
             write_out('|\n', out)
