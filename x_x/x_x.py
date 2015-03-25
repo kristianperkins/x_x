@@ -2,6 +2,7 @@ import itertools
 import string
 import os
 import subprocess
+import sys
 
 import click
 import xlrd
@@ -38,7 +39,10 @@ class XCursor(object):
 @click.argument('filename')
 def cli(filename, heading):
     """ things and stuff about stuff and things """
-    workbook = xlrd.open_workbook(filename)
+    try:
+        workbook = xlrd.open_workbook(filename)
+    except FileNotFoundError:
+        sys.exit('No such file: %s' % filename)
     sheet = workbook.sheet_by_index(0)
     out = subprocess.Popen(
         'less -FXRiS', shell=True, bufsize=0, stdin=subprocess.PIPE).stdin
