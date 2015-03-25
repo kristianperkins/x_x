@@ -1,6 +1,5 @@
-import itertools
 import string
-import os
+import itertools
 import subprocess
 
 import click

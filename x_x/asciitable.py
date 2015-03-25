@@ -2,7 +2,6 @@
 # asciitable.py taken from ipydb: https://github.com/jaysw/ipydb
 
 """Draw ascii tables."""
-import itertools
 import sys
 
 from six import string_types, PY3
@@ -19,8 +18,9 @@ def write_bytes(s, out, encoding="utf-8"):
                 out.write(bytes(s, encoding))
         else:
             out.write(s)
-    except IOError as bpe:
+    except IOError:
         exit()
+
 
 def termsize():
     """Try to figure out the size of the current terminal.
