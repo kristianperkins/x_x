@@ -11,14 +11,16 @@ from six.moves import zip, zip_longest
 
 def write_bytes(s, out, encoding="utf-8"):
     """Provides 2 vs 3 compatibility for writing to ``out``"""
-    if PY3:
-        if isinstance(s, bytes):
-            out.write(s)
+    try:
+        if PY3:
+            if isinstance(s, bytes):
+                out.write(s)
+            else:
+                out.write(bytes(s, encoding))
         else:
-            out.write(bytes(s, encoding))
-    else:
-        out.write(s)
-
+            out.write(s)
+    except BrokenPipeError as bpe:
+        exit()
 
 def termsize():
     """Try to figure out the size of the current terminal.
