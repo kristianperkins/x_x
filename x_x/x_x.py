@@ -12,8 +12,11 @@ from . import asciitable
 class XCursor(object):
 
     def __init__(self, sheet, headingrow=None):
-        self.headingrow = headingrow
         self.sheet = sheet
+        if 0 <= headingrow < self.sheet.nrows:
+            self.headingrow = headingrow
+        else:
+            self.headingrow = None 
 
     def keys(self):
         if self.headingrow is not None:
