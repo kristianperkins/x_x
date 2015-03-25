@@ -5,7 +5,7 @@ import subprocess
 import click
 import xlrd
 
-from . import asciitable
+from . import asciitable, __version__
 
 
 class XCursor(object):
@@ -34,6 +34,7 @@ class XCursor(object):
               '-h',
               type=int,
               help='Row number containing the headings.')
+@click.version_option(version=__version__)
 @click.argument('filename')
 def cli(filename, heading):
     """ things and stuff about stuff and things """
