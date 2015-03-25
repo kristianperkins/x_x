@@ -17,6 +17,7 @@ setup(
         'xlrd',
         'click',
         'six',
+        'jsonpickle'
     ],
     entry_points='''
        [console_scripts]

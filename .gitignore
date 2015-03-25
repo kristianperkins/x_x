@@ -58,3 +58,6 @@ docs/_build/
 
 # ignore excel files
 *.xls*
+
+# Vagrant user-specific files & folders
+.vagrant
