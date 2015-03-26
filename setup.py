@@ -1,5 +1,11 @@
 from setuptools import setup
 from x_x import __version__
+from six import PY3
+
+requirements = ["xlrd", "click", "six"]
+
+if not PY3:
+    requirements.append("unicodecsv")
 
 setup(
     name='x_x',
@@ -14,11 +20,7 @@ setup(
     packages=[
         'x_x',
     ],
-    install_requires=[
-        'xlrd',
-        'click',
-        'six',
-    ],
+    install_requires=requirements,
     entry_points='''
        [console_scripts]
         x_x=x_x.x_x:cli
