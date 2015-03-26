@@ -7,19 +7,7 @@ import sys
 from six import string_types, PY3
 from six.moves import zip, zip_longest
 
-
-def write_bytes(s, out, encoding="utf-8"):
-    """Provides 2 vs 3 compatibility for writing to ``out``"""
-    try:
-        if PY3:
-            if isinstance(s, bytes):
-                out.write(s)
-            else:
-                out.write(bytes(s, encoding))
-        else:
-            out.write(s)
-    except IOError:
-        exit()
+from .compat import write_out
 
 
 def termsize():
@@ -110,15 +98,15 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
 
     def heading_line(sizes):
         for size in sizes:
-            write_bytes('+' + '-' * (size + 2), out)
-        write_bytes('+\n', out)
+            write_out('+' + '-' * (size + 2), out)
+        write_out('+\n', out)
 
     def draw_headings(headings, sizes):
         heading_line(sizes)
         for idx, size in enumerate(sizes):
             fmt = '| %%-%is ' % size
-            write_bytes((fmt % headings[idx]), out)
-        write_bytes('|\n', out)
+            write_out((fmt % headings[idx]), out)
+        write_out('|\n', out)
         heading_line(sizes)
 
     cols, lines = termsize()
@@ -156,8 +144,11 @@ def draw(cursor, out=sys.stdout, paginate=True, max_fieldsize=100):
                         value = value.encode('utf-8', 'replace')
                     except UnicodeDecodeError:
                         value = fmt % '?'
-                    write_bytes(value, out)
-            write_bytes('|\n', out)
+                    write_out(value, out)
+            write_out('|\n', out)
         if not paginate:
             heading_line(sizes)
-            write_bytes('|\n', out)
+            write_out('|\n', out)
+
+    out.stdin.flush()
+    out.stdin.close()
