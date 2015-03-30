@@ -1,10 +1,10 @@
+import sys
 from setuptools import setup
 from x_x import __version__
-from six import PY3
 
 requirements = ["xlrd", "click", "six"]
 
-if not PY3:
+if sys.version[0] == '2':
     requirements.append("unicodecsv")
 
 setup(
